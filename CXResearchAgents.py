@@ -270,7 +270,7 @@ if (submitted):
     # Play with planning, process, manager
 
     crew = Crew(
-        agents=[manager, web_scouter, persona_text_creator, artist],
+        agents=[web_scouter, persona_text_creator, artist],
         tasks=[
             data_gathering_task,
             persona_text_creator_task,
