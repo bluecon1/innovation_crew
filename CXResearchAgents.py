@@ -46,16 +46,15 @@ with st.sidebar:
         # st.write(model_option + openapi_key)
         st.divider()
 
-        st.subheader("Please define your sector:")
+        st.subheader("Please provide the following inputs:")
         sector = st.text_input(
             "Provide information on your industry sector", 
             value="Insurance",)
         
 
-        st.subheader("Please specify your domain:")
-        strategic_priorities = st.text_area(
-            "Describe your key strategic priorities",
-            placeholder="Identifying desirable and feasible innovations to bring to market",
+        # st.subheader("Please specify your domain:")
+        domain = st.text_area(
+            "Provide information on your domain",
             value="Savings & Retirement")
 
         submitted = st.form_submit_button("Submit")
