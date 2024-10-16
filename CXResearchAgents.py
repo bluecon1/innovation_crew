@@ -166,7 +166,9 @@ if (submitted):
                 "You are a world class domain expert in the sector of " + sector + ". You are particularly knowledgeable on the domain " + domain + "."
         ),
         # allow_delegation=False,
-        verbose=verbose_mode
+        verbose=verbose_mode,
+        tools=[website_search_tool],
+
     )
 
     persona_text_creator = Agent(
@@ -178,7 +180,7 @@ if (submitted):
 
         ),
         # allow_delegation=False,
-        verbose=False
+        verbose=False,
     )
 
     artist = Agent(
@@ -189,7 +191,8 @@ if (submitted):
                 "You have been creating beautiful digital images for a long time now and know how to represent clients' asks on screen."
         ),
         # allow_delegation=False,
-        verbose=verbose_mode
+        verbose=verbose_mode,
+        tools=[dalle_tool],
     )
 
     # Tasks
@@ -207,10 +210,9 @@ if (submitted):
         expected_output=(
             "A table with 3 columns - Persona ID, Persona Name, Persona Description"
         ),
-        tools=[website_search_tool],
         human_input=False,
         agent=web_scouter,
-        max_iter=5
+        max_iter=5,
     )
 
     persona_text_creator_task = Task(
@@ -251,10 +253,9 @@ if (submitted):
                 "description are captured in the generated image"
         ),
         expected_output=(
-            "A curated selection of the top 5 personas, comprised of name, description, description, story, goal, pain, need, fear and trends and "
+            "A curated selection of the top 5 personas, comprised of name, description, story, goal, pain, need, fear and trends and "
             " driving forces along with an image."
         ),
-        tools=[dalle_tool],
         agent=artist,
         max_iter=5
     )
