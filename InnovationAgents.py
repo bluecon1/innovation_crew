@@ -1,6 +1,6 @@
-# __import__('pysqlite3')
-# import sys
-# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 from crewai import Agent, Task, Crew, Process
 import os
 from dotenv import load_dotenv
@@ -30,32 +30,61 @@ challenge = ""
 openapi_key = ""
 model_option = ""
 
-st.title("💬 Innovating with AI Agents!")
+st.title("💡 Reconverz innovation playground")
+
+# Display the logo in the sidebar
+st.sidebar.image('Logo.png', width=80)
+
 with st.sidebar:
     st.header("Enter your inputs below 👇")
+
     with st.form("my_form1"):
         model_option = st.selectbox(
             "Select the OpenAI Model", ("gpt-4o"))
         openapi_key = st.text_input(
             "Provide your OpenAPI key", type="password")
         # st.write(model_option + openapi_key)
+        st.divider()
+
+        st.subheader("Sector")
         sector = st.text_input(
-            "Provide information on your industry sector", placeholder="B2B vertically integrated coffee manufacturing")
-        strategic_priorities = st.text_input(
+            "Provide information on your industry sector", 
+            placeholder="B2B vertically integrated coffee manufacturing",
+            value="B2B vertically integrated coffee manufacturing",)
+        
+
+        st.subheader("Strategic priorities")
+        strategic_priorities = st.text_area(
             "Describe your key strategic priorities",
-            placeholder="Identifying desirable and feasible innovations to bring to market")
+            placeholder="Identifying desirable and feasible innovations to bring to market",
+            value="Identifying desirable and feasible innovations to bring to market")
+
+        st.subheader("Key resource")
         key_resource = st.text_input(
-            "Kindly input your key resource (e.g., asset)", placeholder="Coffee plants")
-        resources = st.text_input(
-            "Kindly input your other important resource(s)",
-            placeholder="Coffee plantations, coffee manufacturing plants, with all required machinery to extract and package solid and liquid coffee")
-        clients = st.text_input(
-            "Describe your clients", placeholder="Large fast food chains and coffee retailers")
+            "Input your key resource or asset", placeholder="Coffee plants",
+            value="Coffee plants")
+
+        st.subheader("Other resources")
+        resources = st.text_area(
+            "Input your other important resource(s)",
+            placeholder="Coffee plantations, coffee manufacturing plants, with all required machinery to extract and package solid and liquid coffee",
+            value="Coffee plantations, coffee manufacturing plants, with all required machinery to extract and package solid and liquid coffee")
+
+        st.subheader("Clients")
+        clients = st.text_area(
+            "Describe your clients", placeholder="Large fast food chains and coffee retailers",
+            value="Coffee plantations, coffee manufacturing plants, with all required machinery to extract and package solid and liquid coffee")
+
+        st.subheader("Your challenge")
         challenge = st.text_area(
             "What challenge do you want to solve today?",
-            placeholder="Create a list of ideas on using the byproducts of coffee plant and products generated using coffee creation process, broken down by feasibility, desirability and viability and save the file in an .md format. Do include the sources as well for credibility.")
+            placeholder="Create a list of ideas on using the byproducts of coffee plant and products generated using coffee creation process, broken down by feasibility, desirability and viability and save the file in an .md format. Do include the sources as well for credibility.",
+            value="Create a list of ideas on using the byproducts of coffee plant and products generated using coffee creation process, broken down by feasibility, desirability and viability and save the file in an .md format. Do include the sources as well for credibility.")
 
         submitted = st.form_submit_button("Submit")
+
+        # Add a toggle for verbose output at the bottom of the sidebar
+        verbose_toggle = st.checkbox("Enable Verbose Mode for Agents")
 
 st.divider()
 
@@ -160,6 +189,9 @@ if (submitted):
     #                          n=1)
 
     # Agents
+
+    verbose_mode = verbose_toggle
+    
     manager = Agent(
         role="Project Manager",
         goal="Efficiently manage the research team and ensure the production of world-class research reports",
@@ -171,7 +203,7 @@ if (submitted):
             "If anything is missing or not at the right level of quality, send it back for revision.\n"
         ),
         # allow_delegation=True,
-        verbose=True
+        verbose=verbose_mode
     )
 
     domain_expert = Agent(
@@ -181,7 +213,7 @@ if (submitted):
                 "You are a world class domain expert in the sector of " + sector + ". You are particularly knowledgeable on the key resource {key_resource}."
         ),
         # allow_delegation=False,
-        verbose=True
+        verbose=verbose_mode
     )
 
     engineer = Agent(
@@ -189,11 +221,11 @@ if (submitted):
         goal="Identifying the right methods and technologies to perform the tasks required, and assessing their feasibility.",
         backstory=(
                 "You are an expert engineer, knowing everything in the world of " + sector + "."
-                                                                                             "You are good at providing back of the envelope calculations and estimations on how feasible and complex things are"
+                "You are good at providing back of the envelope calculations and estimations on how feasible and complex things are. "
 
         ),
         # allow_delegation=False,
-        verbose=True
+        verbose=False
     )
 
     marketer = Agent(
@@ -201,35 +233,35 @@ if (submitted):
         goal="Coming up with clever, original product ideas and assessing how likely people are to buy them.",
         backstory=(
                 "You have the pulse of the market for " + sector + "."
-                                                                   "You know what clients and consumers want and can rapidly assess whether they will buy it, in what quantities and for what price."
+                "You know what clients and consumers want and can rapidly assess whether they will buy it, in what quantities and for what price."
         ),
         # allow_delegation=False,
-        verbose=True
+        verbose=verbose_mode
     )
 
     # Tasks
     breakdown_task = Task(
         description=(
                 "Break down " + key_resource + " into mutually exclusive, collectively exhaustive sub-components. "
-                                               "For example, if tasked with finding alternative uses for coffee production byproducts, "
-                                               "you might break it down into beans, trees and coffee grounds. "
-                                               "Each of these could be then be broken down into sub-elements, "
-                                               "e.g., the tree has root, trunk and leaves."
-                                               "Do this based on your training, no need to search online"
-                                               "keep in mind the sector, client, resources and challenge for context. \n"
+                "For example, if tasked with finding alternative uses for coffee production byproducts, "
+                "you might break it down into beans, trees and coffee grounds. "
+                "Each of these could be then be broken down into sub-elements, "
+                "e.g., the tree has root, trunk and leaves."
+                "Do this based on your training, no need to search online. "
+                "Keep in mind the sector, client, resources and challenge for context. \n"
 
-                                               "Generate a table with each part " + key_resource + "(e.g., plant/bean/grounds) in the first column, "
-                                                                                                   "the sub-part in the second (e.g., leaves as part of the plant), "
-                                                                                                   "the core or active principle in the third (e.g., antioxidants, dietary fiber), "
-                                                                                                   "and possible uses or benefits in the fourth. "
-                                                                                                   "Search for possible uses online. "
-                                                                                                   "Be sure to have one row per each possible use: there should be only one possible use in each row, and multiple rows with possible uses for each active principle and sub-part. \n"
+                "Generate a table with each part " + key_resource + "(e.g., plant/bean/grounds) in the first column, "
+                "the sub-part in the second (e.g., leaves as part of the plant), "
+                "the core or active principle in the third (e.g., antioxidants, dietary fiber), "
+                "and possible uses or benefits in the fourth. "
+                "Search for possible uses online. "
+                "Be sure to have one row per each possible use: there should be only one possible use in each row, and multiple rows with possible uses for each active principle and sub-part. \n"
 
-                                                                                                   "Stop and ask the user for confirmation, summarizing what you have done."
+                "Stop and ask the user for confirmation, summarizing what you have done."
 
-                                                                                                   "Sector: " + sector + "\n"
-                                                                                                                         "Clients: " + clients + "\n"
-                                                                                                                                                 "Challenge: " + challenge + "\n"
+                "Sector: " + sector + "\n"
+                "Clients: " + clients + "\n"
+                "Challenge: " + challenge + "\n"
 
         ),
         expected_output=(
@@ -273,10 +305,12 @@ if (submitted):
 
     desirability_task = Task(
         description=(
-                "For each possible use, create 3-5 interesting, effective commercial or product ideas. "
-                "Make sure that the ideas are original, specific and effective."
+                "For each possible use, create 3-5 interesting, effective commercial or product ideas, specifying who is their ideal target segment, which can be B2B or B2C. "
+                "Make sure to create many ideas, the total should be at least 50. "
+                "Make sure that the ideas are original, specific and effective. "
+                "Make sure some of the ideas are highly creative and unpredictable. "
                 "Then think step by step: "
-                "How likely are the target users to buy this product and find it valuable? "
+                "How likely are the target users to buy this product idea and find it valuable? "
                 "How does it compare to the alternatives?"
                 "Add for each commercial idea a desirability assessment and a score. "
                 "Keep in mind the sector, client, resources and challenge for context."
@@ -288,7 +322,7 @@ if (submitted):
 
         ),
         expected_output=(
-            "An output table with one row for each commercial or product idea, showcasing for each: Part, Sub part, Core/active principle, Possible uses, Difficulty of extraction/application, Feasibility score, Commercial/product ideas, Target market, Desirability assessment, Desirability score, Desirability/feasibility average"
+        "An output table with one row for each commercial or product idea, showcasing for each: Part, Sub part, Core/active principle, Possible uses, Difficulty of extraction/application, Feasibility score, Commercial/product ideas, Target market, Desirability assessment, Desirability score, Desirability/feasibility average"
         ),
         tools=[],
         agent=marketer,
@@ -297,10 +331,12 @@ if (submitted):
 
     prioritize_task = Task(
         description=(
-                "Calculate the average between desirability and feasibility scores."
-                "Then pick the top 3 ideas, and create a writeup for each, illustrating why their rationale.\n"
+                "Calculate the average between desirability and feaibility scores."
+                "Then pick the top 5 ideas, and create a writeup for each, illustrating why their rationale.\n"
                 "Keep in mind the sector, client, resources and challenge for context."
                 "Create an image for each of the top ideas which illustrates it simply and accurately."
+                "Make sure the images are simple and tasteful. When the idea is a specific product, represent that product as if it was an advertising shot, with perfect photorealism. "
+                "Make sure they the products don't look like existing products, but that they have a fresh, interesting look to them. "
 
                 "Sector: " + sector + "\n"
                                       "Clients: " + clients + "\n"
@@ -309,7 +345,8 @@ if (submitted):
 
         ),
         expected_output=(
-            "An output table with one row for each commercial or product idea, showcasing for each: Part, Sub part, Core/active principle, Possible uses, Difficulty of extraction/application, Feasibility score, Commercial/product ideas, Target market, Desirability assessment, Desirability score, Desirability/feasibility average"
+            "A curated selection of the top 5 ideas, comprised of idea name, image, and a short paragraph with rationale, desirability & feasibility explanation, resources required. "
+            "The output will be later saved in a .md file, so make sure it is formatted in a way that will display well, including images."
         ),
         tools=[dalle_tool],
         agent=domain_expert,
@@ -339,11 +376,11 @@ if (submitted):
         # manager_agent=manager,
         # manager_llm=manager_llm,
 
-        process=Process.hierarchical,
-        manager_llm=ChatOpenAI(temperature=0, model=model_option, api_key=openapi_key),
-        manager_agent=None,
+        process=Process.sequential,
+        #manager_llm=ChatOpenAI(temperature=0, model=model_option, api_key=openapi_key),
+        #manager_agent=None,
         planning=True,
-        verbose=True,
+        verbose=False,
         memory=True,
         cache=False,
         # share_crew=False,
