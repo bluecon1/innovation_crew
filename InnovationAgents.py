@@ -73,7 +73,7 @@ with st.sidebar:
         st.subheader("Clients")
         clients = st.text_area(
             "Describe your clients", placeholder="Large fast food chains and coffee retailers",
-            value="Coffee plantations, coffee manufacturing plants, with all required machinery to extract and package solid and liquid coffee")
+            value="Large fast food chains and coffee retailers")
 
         st.subheader("Your challenge")
         challenge = st.text_area(
