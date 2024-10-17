@@ -199,7 +199,7 @@ if (submitted):
             "You are a very highly experienced research project manager, and you make sure work is always completed with extremely high standard."
             "You make sure to include multiple revision loops to check the quality and truthfulness of information."
             "Make sure there is first a stage of knowledge collection, then analysis and interpretation, before the report is finalized."
-            "Ensure the content is complete, truthful, relevant to the {topic}, {purpose} and {context}."
+            "Ensure the content is complete, truthful, relevant to the topic, purpose and context."
             "If anything is missing or not at the right level of quality, send it back for revision.\n"
         ),
         # allow_delegation=True,
@@ -280,17 +280,17 @@ if (submitted):
         description=(
                 "Think step by step. "
                 "How can you get from " + key_resource + " to each active principle? "
-                                                         "How hard and expensive is it to extract it, for a company with the following resources " + resources + "? \n"
-                                                                                                                                                                 "Reason well and add a column for each possible use, with a feasibility score from 1-10."
-                                                                                                                                                                 "Keep in mind the sector, client, resources and challenge for context."
-                                                                                                                                                                 "Update the table produced by the previous agent with two new columns.\n"
+                "How hard and expensive is it to extract it, for a company with the following resources " + resources + "? \n"
+                "Reason well and add a column for each possible use, with a feasibility score from 1-10."
+                "Keep in mind the sector, client, resources and challenge for context."
+                "Update the table produced by the previous agent with two new columns.\n"
 
-                                                                                                                                                                 "Stop and ask the user for confirmation, summarizing what you have done."
+                "Stop and ask the user for confirmation, summarizing what you have done."
 
-                                                                                                                                                                 "Sector: " + sector + "\n"
-                                                                                                                                                                                       "Clients: " + clients + "\n"
-                                                                                                                                                                                                               "Challenge: " + challenge + "\n"
-                                                                                                                                                                                                                                           "Resources: + " + resources + "\n"
+                "Sector: " + sector + "\n"
+                "Clients: " + clients + "\n"
+                "Challenge: " + challenge + "\n"
+                "Resources: + " + resources + "\n"
 
         ),
         expected_output=(
@@ -316,9 +316,9 @@ if (submitted):
                 "Keep in mind the sector, client, resources and challenge for context."
 
                 "Sector: " + sector + "\n"
-                                      "Clients: " + clients + "\n"
-                                                              "Challenge: " + challenge + "\n"
-                                                                                          "Resources: + " + resources + "\n"
+                "Clients: " + clients + "\n"
+                "Challenge: " + challenge + "\n"
+                "Resources: + " + resources + "\n"
 
         ),
         expected_output=(
@@ -339,14 +339,13 @@ if (submitted):
                 "Make sure they the products don't look like existing products, but that they have a fresh, interesting look to them. "
 
                 "Sector: " + sector + "\n"
-                                      "Clients: " + clients + "\n"
-                                                              "Challenge: " + challenge + "\n"
-                                                                                          "Resources: + " + resources + "\n"
+                "Clients: " + clients + "\n"
+                "Challenge: " + challenge + "\n"
+                "Resources: + " + resources + "\n"
 
         ),
         expected_output=(
-            "A curated selection of the top 5 ideas, comprised of idea name, image, and a short paragraph with rationale, desirability & feasibility explanation, resources required. "
-            "The output will be later saved in a .md file, so make sure it is formatted in a way that will display well, including images."
+            "A curated selection of the top 5 ideas, comprised of idea name, image, and a short paragraph with rationale, desirability & feasibility explanation, resources required."
         ),
         tools=[dalle_tool],
         agent=domain_expert,
@@ -364,7 +363,7 @@ if (submitted):
     # Play with planning, process, manager
 
     crew = Crew(
-        agents=[manager, domain_expert, engineer, marketer],
+        agents=[domain_expert, engineer, marketer],
         tasks=[
             breakdown_task,
             desirability_task,
@@ -386,7 +385,7 @@ if (submitted):
         # share_crew=False,
         # output_log_file="outputs/content_plan_log.txt",
         # max_rpm=50,
-        output_name='output1.md'
+        # output_name='output1.md'
     )
 
     # result= crew.kickoff()
