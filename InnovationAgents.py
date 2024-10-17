@@ -225,7 +225,7 @@ if (submitted):
 
         ),
         # allow_delegation=False,
-        verbose=False
+        verbose=verbose_mode
     )
 
     marketer = Agent(

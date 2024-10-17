@@ -167,8 +167,6 @@ if (submitted):
         ),
         # allow_delegation=False,
         verbose=verbose_mode,
-        tools=[website_search_tool],
-
     )
 
     persona_text_creator = Agent(
@@ -180,7 +178,7 @@ if (submitted):
 
         ),
         # allow_delegation=False,
-        verbose=False,
+        verbose=verbose_mode,
     )
 
     artist = Agent(
@@ -212,6 +210,7 @@ if (submitted):
         human_input=False,
         agent=web_scouter,
         max_iter=5,
+        tools=[website_search_tool],
     )
 
     persona_text_creator_task = Task(
@@ -237,7 +236,6 @@ if (submitted):
         expected_output=(
             "A textual commentary describing the 5 personas with an innovative name, description, story, goal, pain, need, fear and trends and driving forces. "
         ),
-        # tools=[search_tool, website_search_tool],
         human_input=False,
         agent=persona_text_creator,
         max_iter=5
