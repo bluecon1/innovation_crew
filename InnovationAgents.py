@@ -230,6 +230,18 @@ if (submitted):
 
     marketer = Agent(
         role="Senior Marketer",
+        goal="You use online large language models like OpenAI Dall-E to create awesome images, pertaining to the " + sector + " sector.",
+        backstory=(
+                "You have the artistic pulse of the market for " + sector + "sector."
+                "You have been creating beautiful digital images for a long time now and know how to represent clients' asks on screen."
+        ),
+        # allow_delegation=False,
+        tools=[dalle_tool],
+        verbose=verbose_mode,
+    )
+    
+    artist = Agent(
+        role="Artist",
         goal="Coming up with clever, original product ideas and assessing how likely people are to buy them.",
         backstory=(
                 "You have the pulse of the market for " + sector + "."
@@ -238,6 +250,7 @@ if (submitted):
         # allow_delegation=False,
         verbose=verbose_mode
     )
+
 
     # Tasks
     breakdown_task = Task(
@@ -334,9 +347,6 @@ if (submitted):
                 "Calculate the average between desirability and feaibility scores."
                 "Then pick the top 5 ideas, and create a writeup for each, illustrating why their rationale.\n"
                 "Keep in mind the sector, client, resources and challenge for context."
-                "Create an image for each of the top ideas which illustrates it simply and accurately."
-                "Make sure the images are simple and tasteful. When the idea is a specific product, represent that product as if it was an advertising shot, with perfect photorealism. "
-                "Make sure they the products don't look like existing products, but that they have a fresh, interesting look to them. "
 
                 "Sector: " + sector + "\n"
                 "Clients: " + clients + "\n"
@@ -345,10 +355,24 @@ if (submitted):
 
         ),
         expected_output=(
+            "A curated selection of the top 5 ideas, comprised of idea name, a short paragraph with rationale, desirability & feasibility explanation, resources required."
+        ),
+        agent=domain_expert,
+        max_iter=5
+    )
+    
+    artist_task = Task(
+        description=(
+                "Create an image for each of the 5 ideas which illustrates it simply and accurately."
+                "Make sure the images are simple and tasteful. When the idea is a specific product, represent that product as if it was an advertising shot, with perfect photorealism. "
+                "Make sure they the products don't look like existing products, but that they have a fresh, interesting look to them. "
+                "Keep tge sector in context while generating images. "
+        ),
+        expected_output=(
             "A curated selection of the top 5 ideas, comprised of idea name, image, and a short paragraph with rationale, desirability & feasibility explanation, resources required."
         ),
         tools=[dalle_tool],
-        agent=domain_expert,
+        agent=artist,
         max_iter=5
     )
 
@@ -363,12 +387,13 @@ if (submitted):
     # Play with planning, process, manager
 
     crew = Crew(
-        agents=[domain_expert, engineer, marketer],
+        agents=[domain_expert, engineer, marketer, artist],
         tasks=[
             breakdown_task,
             desirability_task,
             feasibility_task,
-            prioritize_task
+            prioritize_task,
+            artist_task
         ],
 
         # process=Process.hierarchical,
