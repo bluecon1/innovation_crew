@@ -192,7 +192,6 @@ if (submitted):
         ),
         # allow_delegation=False,
         verbose=verbose_mode,
-        tools=[dalle_tool],
     )
 
     # Tasks
@@ -257,7 +256,8 @@ if (submitted):
             " driving forces along with an image."
         ),
         agent=artist,
-        max_iter=5
+        max_iter=5,
+        tools=[dalle_tool],
     )
 
     # Initialize the message log in session state if not already present
@@ -271,11 +271,10 @@ if (submitted):
     # Play with planning, process, manager
 
     crew = Crew(
-        agents=[web_scouter, persona_text_creator, artist],
+        agents=[web_scouter, persona_text_creator],
         tasks=[
             data_gathering_task,
-            persona_text_creator_task,
-            artist_task
+            persona_text_creator_task
         ],
 
         # process=Process.hierarchical,
