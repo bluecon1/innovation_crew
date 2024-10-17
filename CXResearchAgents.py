@@ -258,21 +258,22 @@ if (submitted):
         tools=[dalle_tool],
     )
 
-    # Initialize the message log in session state if not already present
+    # Initialize the message log in session state if not already present and 
     if "messages" not in st.session_state:
         st.session_state["messages"] = [{"role": "assistant", "content": "Welcome to co-innovating with AI Agents."}]
 
-    # Display existing messages
+    # Display existing messages ok
     for msg in st.session_state.messages:
         st.chat_message(msg["role"]).write(msg["content"])
 
     # Play with planning, process, manager
 
     crew = Crew(
-        agents=[web_scouter, persona_text_creator],
+        agents=[web_scouter, persona_text_creator, artist],
         tasks=[
             data_gathering_task,
-            persona_text_creator_task
+            persona_text_creator_task,
+            artist_task
         ],
 
         # process=Process.hierarchical,
