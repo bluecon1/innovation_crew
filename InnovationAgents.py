@@ -78,8 +78,8 @@ with st.sidebar:
         st.subheader("Your challenge")
         challenge = st.text_area(
             "What challenge do you want to solve today?",
-            placeholder="Create a list of ideas on using the byproducts of coffee plant and products generated using coffee creation process, broken down by feasibility, desirability and viability and save the file in an .md format. Do include the sources as well for credibility.",
-            value="Create a list of ideas on using the byproducts of coffee plant and products generated using coffee creation process, broken down by feasibility, desirability and viability and save the file in an .md format. Do include the sources as well for credibility.")
+            placeholder="Create a list of ideas on using the byproducts of coffee plant and products generated using coffee creation process, broken down by feasibility, desirability and viability. Do include the sources as well for credibility.",
+            value="Create a list of ideas on using the byproducts of coffee plant and products generated using coffee creation process, broken down by feasibility, desirability and viability. Do include the sources as well for credibility.")
 
         submitted = st.form_submit_button("Submit")
 
